@@ -1,0 +1,35 @@
+<!-- dialog-box.component.html -->
+<mat-spinner  *ngIf="loading" diameter=50 style="margin:0 auto;"></mat-spinner>
+<div *ngIf="!loading" >
+    <h1 mat-dialog-title><strong>{{modalTitle}}</strong></h1>
+    <div mat-dialog-content >
+        
+        <section *ngIf="action != 'Delete'; else elseTemplate">
+
+            <form class="example-form">
+                <mat-form-field >
+                  <mat-label>Code</mat-label>
+                  <input matInput type="number" placeholder="Ex. 100" [(ngModel)]="local_data.code" name="code">
+                </mat-form-field>
+              
+                <mat-form-field >
+                  <mat-label>Name</mat-label>
+                  <input matInput placeholder="Ex. Savings Account" [(ngModel)]="local_data.name" name="name">
+                </mat-form-field>
+               
+                <mat-checkbox class="userModal-margin" [(ngModel)]="local_data.showInRegister" name="showInRegister">Show in register</mat-checkbox>
+
+              </form>
+                         
+        </section>
+
+        <ng-template #elseTemplate>
+            Sure to delete <b>{{local_data.name}}</b>?
+        </ng-template>
+    </div>
+
+    <mat-dialog-actions align="end">
+      <button mat-button (click)="doAction()" mat-flat-button>{{action}}</button>
+      <button mat-button (click)="closeDialog()" mat-flat-button color="warn">Cancel</button>
+    </mat-dialog-actions>
+</div>

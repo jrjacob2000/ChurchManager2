@@ -1,0 +1,48 @@
+
+:host::ng-deep{
+
+  ::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0,0,0,.5);
+    // -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+  }
+
+  .currentBalanceError
+  {
+    border-style: solid;
+    border-color:red;
+    color:red;
+  }
+
+  .table-wraper
+  {    
+    
+    overflow-x:auto;
+  }
+  .split-header{
+    .mat-form-field {
+      margin-right: 8px;
+    }
+  }
+  
+  table {
+      width: 100%;
+      
+    }  
+    mat-table{
+      min-width: 800px !important;
+    }
+  
+    td.mat-cell{
+      padding-right: 5px;;
+    }
+    
+  .material-icons{
+    cursor: pointer;
+  }
+}
+

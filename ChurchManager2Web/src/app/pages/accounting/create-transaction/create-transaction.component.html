@@ -1,0 +1,192 @@
+
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-12">
+          <h1>New Transaction</h1>
+        </div>
+        <!-- <div class="col-sm-6">
+          <ol class="breadcrumb float-sm-right">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Blank Page</li>
+          </ol>
+        </div> -->
+      </div>
+    </div>
+    <!-- /.container-fluid -->
+</section>
+  
+<!-- Main content -->
+<section class="content">
+  <!-- Default box -->
+  <div class="container-fluid">
+    
+    <form id="transactionFormId" (ngSubmit)="onSubmit()" [formGroup]="transHeaderForm" >
+
+    
+      <div class="card">
+        <div class="card-header">
+          <mat-form-field appearance="outline" >
+            <mat-label>Account Register</mat-label>
+            <mat-select required formControlName="register" name="register"    >
+                <mat-option>--</mat-option>
+                <mat-option *ngFor="let account of registerOptions" [value]="account.value">{{account.displayText}}</mat-option>
+            </mat-select>
+            <mat-error>Please choose account register</mat-error>
+          </mat-form-field>
+          <div class="card-tools">              
+            <button type="submit" form="transactionFormId" mat-raised-button color="accent" style="width: 100px;"><mat-icon>save</mat-icon> SAVE</button>
+          </div>
+        </div>
+        
+        <div class="card-body">
+            <div class="split-header">
+
+              <mat-form-field appearance="outline" style="width: 201px;">
+                <mat-label>Transaction Date</mat-label>
+                <input matInput [matDatepicker]="transDatePicker"  name="transactionDate" formControlName="transactionDate" [(ngModel)]="transaction.transactionDate" >
+                <mat-datepicker-toggle matSuffix [for]="transDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #transDatePicker></mat-datepicker>
+                <mat-error  >Please choose a transaction date</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Payee</mat-label>
+                <input matInput name="payee" formControlName="payee" [(ngModel)]="transaction.payee" >
+                <mat-error  >Payee is required</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>Payment</mat-label>
+                <input matInput  type="number" name="payment" formControlName="payment" (change)="paymentChanged($event)"  [(ngModel)]="transaction.payment">
+                <mat-error  >Payment is required</mat-error>
+              </mat-form-field>
+        
+              <mat-form-field appearance="outline">
+                <mat-label>Deposit</mat-label>
+                <input matInput type="number" name="deposit" formControlName="deposit" (change)="depositChanged($event)" [(ngModel)]="transaction.deposit">
+                <mat-error >Deposit is required</mat-error>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" style="max-width: 412px; display: block; ">
+                <mat-label>Comment</mat-label>
+                <input matInput name="comment" formControlName="comment" [(ngModel)]="transaction.comment">
+              </mat-form-field>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <span>Split line</span>
+                <div class="card-tools">     
+                  <div [ngClass]="{'currentBalanceError' : currentBalance != 0}" style="min-width: 200px; padding: 5px;border-radius: 5px;">         
+                    <mat-label tyle="width: 30px;">Remaining Balance: {{currentBalance}}</mat-label>
+                  </div>
+                  <span *ngIf="currentBalance != 0" style="font-size: 10px; color:red">Amount is not properly allocated</span>
+                </div>
+              </div>
+              <div class="card-body">
+                <div formArrayName="transactionLines" class="table-wraper" >                                                     
+                    <table #table mat-table  [dataSource]="transactionLines.controls">
+                
+                      <!--- Note that these columns can be defined in any order.
+                            The actual rendered columns are set as a property on the row definition" -->
+                
+                      <!-- account Column -->
+                      <ng-container matColumnDef="account">
+                        <th mat-header-cell *matHeaderCellDef> Account </th>
+                        <td mat-cell *matCellDef="let element; let i = index;" [formGroup]="element"> 
+
+                          <mat-form-field appearance="outline" style="width: 100%;">
+                            <mat-select required formControlName="account" name="account" >
+                                <mat-option>--</mat-option>
+                                <mat-option *ngFor="let account of accountOptions"  [value]="account.value">{{account.displayText}}</mat-option>
+                            </mat-select>
+                            <mat-error>Please choose an account</mat-error>
+                          </mat-form-field>
+
+                        </td>
+                      </ng-container>
+                
+                      <!-- fund Column -->
+                      <ng-container matColumnDef="fund">
+                        <th mat-header-cell *matHeaderCellDef> Fund </th>
+                        <td mat-cell *matCellDef="let element" [formGroup]="element" >
+                          <mat-form-field appearance="outline" style="width: 100%;">
+                            <mat-select formControlName="fund"  required>
+                              <mat-option>--</mat-option>
+                              <mat-option *ngFor="let fund of fundOptions" [value]="fund.value">{{fund.displayText}}</mat-option>
+                            </mat-select>
+                            <mat-error>Please choose a fund</mat-error>
+                          </mat-form-field>
+                        </td>
+                      </ng-container>
+                
+                       <!-- percent Column -->
+                       <ng-container matColumnDef="percent">
+                        <th mat-header-cell *matHeaderCellDef width ="55px;"> Percent </th>
+                        <td mat-cell *matCellDef="let element; let i = index;" [formGroup]="element" style="width: 55px;">
+                          <mat-form-field appearance="outline"  style="width: 60px;">
+                            <input matInput type="number" formControlName="percent"  (change)="percentChanged($event,element)" >
+                          </mat-form-field>
+                        </td>
+                      </ng-container>
+
+                      <!-- Amount Column -->
+                      <ng-container matColumnDef="amount">
+                        <th mat-header-cell *matHeaderCellDef> Amount </th>
+                        <td mat-cell *matCellDef="let element;" [formGroup]="element">
+                          <mat-form-field appearance="outline"  >
+                            <input matInput type="number" formControlName="amount" (change)="amountChanged($event,element)" required>
+                            <mat-error>Amount is required</mat-error>
+                          </mat-form-field>
+                          
+                        </td>
+                      </ng-container>
+
+                      <!-- Action Column -->
+                      <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef > Action </th>
+                        <td mat-cell *matCellDef="let element; let i = index;" [formGroup]="element">
+                          <div *ngIf="transactionLines.length > 1" >
+                            <a  (click)="deleteRow(i)" title="delete" disable="true">
+                              <mat-icon>delete</mat-icon>
+                            </a> 
+                          </div>
+                        </td>
+                      </ng-container>
+                
+                      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                
+
+                </div>
+              </div>
+              <!-- /.card-body -->
+              <div class="card-footer">
+                <div style="float: right;">  
+                  <button mat-raised-button color="primary" (click)="addrow()" title="Add row for split transaction" >SPLIT</button>
+                </div>
+              </div>
+              <!-- /.card-footer-->
+            </div>
+        
+        
+        </div>
+        <!-- /.card-body -->
+        <div class="card-footer">
+          <div style="float: right;">  
+            <button type="submit" form="transactionFormId" mat-raised-button color="accent" style="width: 100px;" ><mat-icon>save</mat-icon> SAVE</button>
+          </div>
+        </div>
+        <!-- /.card-footer-->
+        
+      </div>
+       <!-- /.card -->
+    </form>
+  </div>
+ 
+</section>
+<!-- /.content -->
+  

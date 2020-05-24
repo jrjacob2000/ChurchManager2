@@ -1,0 +1,131 @@
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <div class="container-fluid">
+      <div class="row mb-2">
+        <div class="col-sm-12">
+          <h1>Transaction List</h1>
+        </div>        
+      </div>
+    </div>
+    <!-- /.container-fluid -->
+  </section>
+  
+  <!-- Main content -->
+  <section class="content">
+    <!-- Default box -->
+    <div class="container-fluid">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="card-title"></h3>
+          <div class="filter-container">
+              <mat-form-field appearance="outline" >
+                <mat-label>Account Register</mat-label>
+                <mat-select  name="register" [(value)] ="selectedRegister" [(ngModel)]="selectedRegister" >
+                    <mat-option *ngFor="let account of registerOptions" [value]="account.value">{{account.displayText}}</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline" style="width: 201px;">
+                <mat-label>Date From</mat-label>
+                <input matInput [matDatepicker]="dateFromPicker"  name="dateFromPicker" [(ngModel)]="selectedDateFrom" >
+                <mat-datepicker-toggle matSuffix [for]="dateFromPicker"></mat-datepicker-toggle>
+                <mat-datepicker #dateFromPicker></mat-datepicker>
+              </mat-form-field>
+              <mat-form-field appearance="outline" style="width: 201px;">
+                <mat-label>Date To</mat-label>
+                <input matInput [matDatepicker]="dateToPicker"  name="dateToPicker" [(ngModel)]="selectedDateTo" >
+                <mat-datepicker-toggle matSuffix [for]="dateToPicker"></mat-datepicker-toggle>
+                <mat-datepicker #dateToPicker></mat-datepicker>
+              </mat-form-field>
+              <button mat-icon-button (click)="search($event)" ><mat-icon>search</mat-icon></button>
+          </div>
+          <div class="card-tools">
+            <div class="input-group input-group-sm" style="width: 150px; display: none;">
+              <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+              <div class="input-group-append">
+                <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body table-responsive p-0">
+            <div class="grid-loading-shade"
+                *ngIf="isLoadingResults">
+                <mat-spinner *ngIf="isLoadingResults"></mat-spinner>                
+            </div>
+
+            <div class="grid-table-container">
+
+                <table mat-table [dataSource]="data" class="grid-table"
+                       matSort matSortActive="created" matSortDisableClear matSortDirection="desc">
+                  <!-- transactionDate Column -->
+                  <ng-container matColumnDef="transactionDate">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>transactionDate</th>
+                    <td mat-cell *matCellDef="let row">
+                      <a [routerLink]="['/accounting/transactions', row.id]">{{row.transactionDate | date: 'MM/dd/yyyy' }}</a></td>
+                  </ng-container>
+            
+                  <!-- payee Column -->
+                  <ng-container matColumnDef="payee">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>payee</th>
+                    <td mat-cell *matCellDef="let row">{{row.payee}}</td>
+                  </ng-container>
+            
+                  <!-- accountName Column -->
+                  <ng-container matColumnDef="accountName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>accountName</th>
+                    <td mat-cell *matCellDef="let row">{{row.accountName}}</td>
+                  </ng-container>
+            
+                  <!-- fundName Column -->
+                  <ng-container matColumnDef="fundName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear>
+                        fundName
+                    </th>
+                    <td mat-cell *matCellDef="let row">{{row.fundName}}</td>
+                  </ng-container>
+
+                  <!-- payment Column -->
+                  <ng-container matColumnDef="payment">
+                    <th mat-header-cell *matHeaderCellDef>
+                        payment
+                    </th>
+                    <td mat-cell *matCellDef="let row">{{row.payment}}</td>
+                  </ng-container>
+
+                  <!-- deposit Column -->
+                  <ng-container matColumnDef="deposit">
+                    <th mat-header-cell *matHeaderCellDef>
+                        deposit
+                    </th>
+                    <td mat-cell *matCellDef="let row">{{row.deposit}}</td>
+                  </ng-container>
+            
+                  <!-- Action Column -->
+                  <ng-container matColumnDef="action">
+                    <th mat-header-cell *matHeaderCellDef> Action </th>
+                    <td mat-cell *matCellDef="let element" class="action-link">
+                      <a *ngIf="element.isClosed == 'false'" (click)="openDialog('Close',element)" title="close">
+                        <mat-icon>close</mat-icon>
+                      </a>  
+                      <a *ngIf="element.isClosed == 'false'" (click)="openDialog('Delete',element)" title="Delete">
+                        <mat-icon>delete</mat-icon>
+                      </a>  
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+              </div>
+            
+              <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" [length]="resultsLength" ></mat-paginator>
+        </div>
+        <!-- /.card-body -->
+      </div>
+      <!-- /.card -->
+    </div>
+    <!-- /.card -->
+  </section>
+  <!-- /.content -->
+  

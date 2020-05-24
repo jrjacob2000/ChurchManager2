@@ -1,0 +1,21 @@
+<!-- dialog-box.component.html -->
+<mat-spinner  *ngIf="loading" diameter=50 style="margin:0 auto;"></mat-spinner>
+<div *ngIf="!loading">
+    <h1 mat-dialog-title><strong>{{action == 'Update'?'Update role' : action}}</strong></h1>
+    <div mat-dialog-content>
+        <section class="userModal-section" *ngIf="action != 'Delete'; else elseTemplate">
+            <mat-checkbox class="userModal-margin" [(ngModel)]="local_data.isAdmin">Admin</mat-checkbox>
+            <mat-checkbox class="userModal-margin" [(ngModel)]="local_data.isAccountant">Accountant</mat-checkbox>
+            <mat-checkbox class="userModal-margin" [(ngModel)]="local_data.isEncoder">Encoder</mat-checkbox>
+        </section>
+
+        <ng-template #elseTemplate>
+            Sure to delete <b>{{local_data.email}}</b>?
+        </ng-template>
+    </div>
+
+    <mat-dialog-actions align="end">
+        <button mat-button (click)="doAction()">{{action}}</button>
+        <button mat-button (click)="closeDialog()" mat-flat-button color="warn">Cancel</button>
+    </mat-dialog-actions>
+</div>
