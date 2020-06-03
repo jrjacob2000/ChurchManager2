@@ -403,23 +403,7 @@ namespace ChurchManagerApi.Controllers
             return lines;
         }
 
-        private class UpsertResult
-        {
-            internal Transaction Data { get; set; }
-            internal List<string> Errors { get; set; }
-        }
 
-        public class GridFilter
-        {
-            public Guid AccountRegisterId { get; set; }
-            public DateTime? DateFrom { get; set; }
-            public DateTime? DateTo { get; set; }
-            public int PageSize { get; set; }
-            public int Page { get; set; }
-            public string Sort { get; set; }
-            public string Order { get; set; }
-
-        }
     
     }
 }

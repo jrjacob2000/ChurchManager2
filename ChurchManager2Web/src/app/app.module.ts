@@ -37,7 +37,7 @@ import { RouterModule } from '@angular/router';
     RegisterComponent,
     DashboardComponent,
     MessagesDropdownMenuComponent,
-    NotificationsDropdownMenuComponent
+    NotificationsDropdownMenuComponent,
   ],
   imports: [
     BrowserModule,

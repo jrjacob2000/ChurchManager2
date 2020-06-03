@@ -178,3 +178,4 @@ C:\Users\jonathanj\source\repos\ChurchManager2\ChurchManagerApi\bin\Debug\netcor
 C:\Users\jonathanj\source\repos\ChurchManager2\ChurchManagerApi\bin\Debug\netcoreapp3.1\System.Xml.XPath.XmlDocument.dll
 C:\Users\jonathanj\source\repos\ChurchManager2\ChurchManagerApi\obj\Debug\netcoreapp3.1\ChurchManagerApi.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\jonathanj\source\repos\ChurchManager2\ChurchManagerApi\obj\Debug\netcoreapp3.1\ChurchManagerApi.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\jonathanj\source\repos\ChurchManager2\ChurchManagerApi\obj\Debug\netcoreapp3.1\ChurchManagerApi.csprojAssemblyReference.cache

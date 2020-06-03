@@ -41,6 +41,7 @@ const routes: Routes = [
   },
   {path: 'admin', loadChildren: () => import('./pages/admin/admin.module').then(m => m.AdminModule)},
   {path: 'accounting', loadChildren: () => import('./pages/accounting/accounting.module').then(m => m.AccountingModule)},
+  {path: 'reports', loadChildren: () => import('./pages/reports/reports.module').then(m => m.ReportsModule)},
   { path: '**', redirectTo: '' }
 ];
 

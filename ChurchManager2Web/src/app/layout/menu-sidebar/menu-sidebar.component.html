@@ -1,13 +1,13 @@
 <aside #mainSidebar class="main-sidebar sidebar-dark-primary elevation-4">
   <!-- Brand Logo -->
   <a [routerLink]="['/']" class="brand-link">
-    <img
+    <!-- <img
       src="assets/img/AdminLTELogo.png"
       alt="AdminLTE Logo"
       class="brand-image img-circle elevation-3"
       style="opacity: .8"
-    />
-    <span class="brand-text font-weight-light">AdminLTE 3</span>
+    /> -->
+    <span class="brand-text font-weight-light">Church Manager</span>
   </a>
 
   <!-- Sidebar -->
@@ -44,12 +44,12 @@
             </p>
           </a>
         </li>
-        
+         <!--Accounting Menu -->
         <li #accountingMenu class="nav-item has-treeview"  [ngClass]="{'menu-open' : routeContains('accounting')}">
           <a class="nav-link" (click)="toggleNavSidebar(accountingMenu,'accounting')" [ngClass]="{'active' : routeContains('accounting')}">
             <i class="nav-icon fas fa-money-bill"></i>
               <p>
-                Accounting
+                Financial
                 <i class="right fas fa-angle-left"></i>
               </p>
           </a>
@@ -74,6 +74,31 @@
             </li>
           </ul>
         </li>        
+        <!--Reports Menu -->
+        <li #reportsMenu class="nav-item has-treeview"  [ngClass]="{'menu-open' : routeContains('reports')}">
+          <a class="nav-link" (click)="toggleNavSidebar(reportsMenu,'reports')" [ngClass]="{'active' : routeContains('reports')}">
+            <i class="nav-icon fas fa-chart-bar"></i>
+              <p>
+                Reports
+                <i class="right fas fa-angle-left"></i>
+              </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a [routerLink]="['/reports/activity']"  class="nav-link" [ngClass]="{active : router.url == '/reports/activity'}">
+                <i class="fas fa-angle-double-right nav-icon"></i>
+                <p>Income Statement</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a [routerLink]="['/reports/financialPosition']"  class="nav-link" [ngClass]="{active : router.url == '/reports/financialPosition'}">
+                <i class="fas fa-angle-double-right nav-icon"></i>
+                <p>Balance Sheet</p>
+              </a>
+            </li>
+          </ul>
+        </li>  
+
         <li #manageUserMenu class="nav-item">
           <a [routerLink]="['/admin/list']" class="nav-link" (click)="toggleNavSidebar(manageUserMenu,'manageUser')" [ngClass]="{'active' : router.url == '/admin/list'}">
             <i class="nav-icon fas fa-users"></i>

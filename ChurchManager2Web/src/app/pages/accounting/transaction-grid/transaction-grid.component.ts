@@ -1,19 +1,16 @@
 
-import {HttpClient} from '@angular/common/http';
-import {Component, OnInit, ViewChild, AfterViewInit, EventEmitter, ElementRef} from '@angular/core';
+import {Component, OnInit, ViewChild, AfterViewInit, EventEmitter} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
-import {merge, Observable, of as observableOf, BehaviorSubject} from 'rxjs';
+import {merge, of as observableOf} from 'rxjs';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
-import { TransactionGridResult, TransactionGridData, TransactionGridFilter } from 'src/app/utils/models/transaction';
+import { TransactionGridData, TransactionGridFilter } from 'src/app/utils/models/transaction';
 import { TransactionService } from 'src/app/utils/services/transaction/transaction-service';
 import { ToastrService } from 'ngx-toastr';
 import { AccountChartService } from 'src/app/utils/services/accountChart/account-chart.service';
 import { MatSelect } from '@angular/material/select';
 import { TransactionModalComponent } from './transaction-modal/transaction-modal.component';
 import { MatDialog } from '@angular/material/dialog';
-import { MatButton } from '@angular/material/button';
-import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-transaction-grid',
@@ -92,7 +89,7 @@ export class TransactionGridComponent implements AfterViewInit,OnInit {
             return data.items;
           }),
           catchError(() => {
-            this.toastr.error("Failed to retreive transaction");
+            this.toastr.error("Failed to retreive transactions");
             this.isLoadingResults = false;
             return observableOf([]);
           })

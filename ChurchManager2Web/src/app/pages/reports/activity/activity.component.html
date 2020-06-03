@@ -1,0 +1,148 @@
+ <!-- Content Wrapper. Contains page content -->
+ <div >
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Income Statement Report</h1>
+          </div>
+          <div class="col-sm-6" >
+            <button mat-stroked-button  class="float-right" (click)="printReport()" style="margin-right: 5px;"><mat-icon>printer</mat-icon>Print</button>
+            
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+    </section>
+
+    <section class="content print-this">
+      <div class="container-fluid">
+          <div class="card no-print">
+              <div class="card-body">
+                <form [formGroup]="filterForm" autocomplete="off" novalidate (ngSubmit)="loadData()" fxLayout="column wrap"
+                        fxLayoutAlign="center center" fxLayoutGap="10px">
+                        <mat-form-field appearance="outline" style="width: 201px; margin-right: 5px;">
+                            <mat-label>Date From</mat-label>
+                            <input matInput [matDatepicker]="dateFromPicker"  name="dateFromPicker" formControlName="dateFromPicker" [(ngModel)]="selectedDateFrom" >
+                            <mat-datepicker-toggle matSuffix [for]="dateFromPicker"></mat-datepicker-toggle>
+                            <mat-datepicker #dateFromPicker></mat-datepicker>
+                          </mat-form-field>
+                          <mat-form-field appearance="outline" style="width: 201px; margin-right: 5px;">
+                            <mat-label>Date To</mat-label>
+                            <input matInput [matDatepicker]="dateToPicker"  name="dateToPicker" formControlName="dateToPicker" [(ngModel)]="selectedDateTo" >
+                            <mat-datepicker-toggle matSuffix [for]="dateToPicker"></mat-datepicker-toggle>
+                            <mat-datepicker #dateToPicker></mat-datepicker>
+                          </mat-form-field>
+
+                          
+                  <button mat-flat-button type="submit" color="accent" style="margin-left: 5px;">Generate</button>
+                </form>
+                  
+              </div>
+          </div>
+
+        <div class="row print-this">
+          <div class="col-12">
+            <div class="grid-loading-shade"
+                *ngIf="isLoadingResults">
+                <mat-spinner *ngIf="isLoadingResults"></mat-spinner>                
+            </div>
+            <!-- Main content -->
+            <div *ngIf="data == null && !isLoadingResults" class="invoice p-3 mb-3">
+                <div class="row d-flex justify-content-center">No report to display</div>
+            </div>
+            <div *ngIf="data" class="invoice p-3 mb-3">
+              <!-- title row -->
+              <div class="row">
+                <div class="col-12">
+                    <h2>
+                        <div class="d-flex justify-content-center">
+                            {{data?.reportTitle?.churchName}}</div>
+                        <div class="d-flex justify-content-center sub-title">
+                            <small>Income Statement Report</small>
+                        </div>
+                        <div class="d-flex justify-content-center sub-title">
+                            <small>Period: {{selectedDateFrom | date}} - {{selectedDateTo | date}}</small>
+                        </div>
+                    </h2>
+                </div>
+                <!-- /.col -->
+              </div>
+              <!-- info row -->
+              
+
+              <!-- Table row -->
+              <div class="row">
+                    
+                    <div *ngIf="data" class="col-12 table-responsive">
+                        <table class="table table-condensed table-borderless" style="border-style: none; border-width: 0;" cellspacing="0">
+                            <thead>
+                                <tr>           
+                                <th class="table-header {{head != 'Account' ? 'amount-col' : '' }}"  *ngFor="let head of _object.keys(colHeader); let i = index">{{head != 'Account' ? head : ''}}</th>
+                                </tr>
+                            </thead>
+                            <tbody style="padding-left: 50px;">
+                                <tr>
+                                    <td class="bal-desc-total-col">INCOMES</td>
+                                </tr>
+                                <tr *ngFor="let row of data?.incomes">           
+                                <td class="{{objKey == 'Account' ? 'desc-col' : 'amount-col' }}" *ngFor="let objKey of _object.keys(row); let j = index">{{ checkIfNumber(row[objKey]) ?  (+row[objKey] | number : '1.3') : row[objKey] }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="{{head != 'Account' ? 'amount-total-col' : 'desc-total-col' }}"  *ngFor="let head of _object.keys(colHeader); let i = index">{{head != 'Account' ? (getIncomeSum(head) | number : '1.3' ): 'TOTAL'}}</td>
+                                </tr>
+                            </tbody>
+                            <tbody style="padding-left: 50px;">
+                                <tr>
+                                    <td class="bal-desc-total-col">EXPENSES</td>
+                                </tr>
+                                <tr *ngFor="let row of data?.expenses">           
+                                <td class="{{objKey == 'Account' ? 'desc-col' : 'amount-col' }}" *ngFor="let objKey of _object.keys(row); let j = index">{{ checkIfNumber(row[objKey]) ?  (+row[objKey] | number : '1.3') : row[objKey] }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="{{head != 'Account' ? 'amount-total-col' : 'desc-total-col' }}"  *ngFor="let head of _object.keys(colHeader); let i = index">{{head != 'Account' ? (getExpenseSum(head) | number : '1.3' ): 'TOTAL'}}</td>
+                                </tr>
+                            </tbody>
+                            <tbody>
+                                <tr *ngIf="beginningBalance == null">
+                                    <td class="{{head != 'Account' ? 'amount-total-col' : 'bal-desc-total-col' }}"  *ngFor="let head of _object.keys(colHeader); let i = index">{{i == 0 ? 'BEGINNING BALANCE OF THE PERIOD' : +'0.000' | number : '1.3'}}</td>
+                                </tr>
+                                <tr *ngIf="beginningBalance != null">           
+                                    <td class="{{objKey != 'Account' ?  'amount-total-col' : 'bal-desc-total-col' }}" *ngFor="let objKey of _object.keys(beginningBalance); let j = index">{{ checkIfNumber(beginningBalance[objKey]) ?  (+beginningBalance[objKey] | number : '1.3') : 'BEGINNING BALANCE OF THE PERIOD' }}</td>
+                                </tr>
+                                
+                                <tr *ngIf="endingBalance != null">
+                                    <td class="{{objKey != 'Account' ? 'amount-total-col' : 'bal-desc-total-col' }}" *ngFor="let objKey of _object.keys(endingBalance); let j = index">{{ checkIfNumber(endingBalance[objKey]) ?  (+endingBalance[objKey] | number : '1.3') : 'ENDING BALANCE OF THE PERIOD' }}</td>
+                                </tr>
+                                <tr *ngIf="endingBalance == null">
+                                    <td class="{{head != 'Account' ? 'amount-total-col' : 'bal-desc-total-col' }}"  *ngFor="let head of _object.keys(colHeader); let i = index">{{i == 0 ? 'ENDING BALANCE OF THE PERIOD' : +'0.000' | number : '1.3'}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                
+                        
+
+                    </div>
+                <!-- /.col -->
+                </div>
+              <!-- /.row -->
+
+             
+
+              <!-- this row will not appear when printing -->
+              <div class="no-print" >
+                <div class="col-12">
+
+                  
+                </div>
+              </div>
+            </div>
+            <!-- /.invoice -->
+          </div><!-- /.col -->
+        </div><!-- /.row -->
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+  </div>
+  <!-- /.content-wrapper -->
+  
